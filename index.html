@@ -29,10 +29,10 @@
     <h2>Absen Rawat Inap</h2>
 
     <label for="id">ID:</label>
-    <input type="text" id="id" name="id" required>
+    <input type="text" id="id" name="id" required readonly>
 
     <label for="nama">Nama:</label>
-    <input type="text" id="nama" name="nama" required>
+    <input type="text" id="nama" name="nama" required readonly>
 
     <label for="status">Status:</label>
     <select id="status" name="status" required>
@@ -41,7 +41,7 @@
     </select>
 
     <label for="shift">Shift:</label>
-    <select id="shift" name="shift" required>
+    <select id="shift" name="shift" required disabled>
         <option value="1">Shift 1 (08:00 - 16:00)</option>
         <option value="2">Shift 2 (16:00 - 08:00)</option>
     </select>
@@ -54,6 +54,7 @@
             var params = new URLSearchParams(window.location.search);
             var id = params.get("id");
             var nama = params.get("nama");
+            var shift = params.get("shift");
 
             if (id) {
                 document.getElementById("id").value = id; // Mengisi ID Pegawai
@@ -61,6 +62,14 @@
             if (nama) {
                 document.getElementById("nama").value = nama; // Mengisi Nama Pegawai
             }
+            if (shift) {
+                document.getElementById("shift").value = shift; // Mengisi Shift yang dipilih
+            }
+
+            // Menonaktifkan input agar tidak bisa diubah setelah data diisi
+            document.getElementById("id").setAttribute("readonly", "true");
+            document.getElementById("nama").setAttribute("readonly", "true");
+            document.getElementById("shift").setAttribute("disabled", "true");
         }
 
         // Fungsi untuk mengirim data absen
@@ -69,8 +78,8 @@
             var nama = document.getElementById('nama').value;
             var status = document.getElementById('status').value;
             var shift = document.getElementById('shift').value;
-			
-			var url = `https://script.google.com/macros/s/AKfycbym4OZ6tUX5UamoL4kyv_2LGGCNqytiGlK13FcWa_5D2hPICZEd8bIEVTnaYToSgcNo/exec?id=${id}&nama=${nama}&status=${status}&shift=${shift}`;
+
+            var url = `https://script.google.com/macros/s/AKfycbym4OZ6tUX5UamoL4kyv_2LGGCNqytiGlK13FcWa_5D2hPICZEd8bIEVTnaYToSgcNo/exec?id=${id}&nama=${nama}&status=${status}&shift=${shift}`;
 
             fetch(url)
                 .then(response => response.text())
@@ -83,4 +92,3 @@
     </script>
 </body>
 </html>
-	
