@@ -5,48 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absen Rawat Inap</title>
     <style>
+        /* Menggunakan Flexbox untuk memusatkan konten */
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
         }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; /* Ukuran form maksimal */
+        }
+
         label, input, select {
             display: block;
             margin-bottom: 10px;
+            width: 100%;
         }
+
         button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
         }
+
         button:hover {
             background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h2>Absen Rawat Inap</h2>
+    <div class="container">
+        <h2>Absen Rawat Inap</h2>
 
-    <label for="id">ID:</label>
-    <input type="text" id="id" name="id" required readonly>
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required readonly>
 
-    <label for="nama">Nama:</label>
-    <input type="text" id="nama" name="nama" required readonly>
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" name="nama" required readonly>
 
-    <label for="status">Status:</label>
-    <select id="status" name="status" required>
-        <option value="Masuk">Masuk</option>
-        <option value="Keluar">Keluar</option>
-    </select>
+        <label for="shift">Shift:</label>
+        <select id="shift" name="shift" required disabled>
+            <option value="1">Shift 1 (08:00 - 16:00)</option>
+            <option value="2">Shift 2 (16:00 - 08:00)</option>
+        </select>
 
-    <label for="shift">Shift:</label>
-    <select id="shift" name="shift" required disabled>
-        <option value="1">Shift 1 (08:00 - 16:00)</option>
-        <option value="2">Shift 2 (16:00 - 08:00)</option>
-    </select>
+        <!-- Status moved below Shift -->
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+            <option value="Masuk">Masuk</option>
+            <option value="Keluar">Keluar</option>
+        </select>
 
-    <button onclick="submitAbsensi()">Kirim Absen</button>
+        <button onclick="submitAbsensi()">Kirim Absen</button>
+    </div>
 
     <script>
         // Mendapatkan parameter dari URL
