@@ -1,113 +1,153 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Absen Rawat Inap</title>
-    <style>
-        /* Menggunakan Flexbox untuk memusatkan konten */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Absen Rawat Inap</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
 
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px; /* Ukuran form maksimal */
-        }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
 
-        label, input, select {
-            display: block;
-            margin-bottom: 10px;
-            width: 100%;
-        }
+    label, input {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+    }
 
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            border-radius: 4px;
-        }
+    input[readonly] {
+      background-color: #e9e9e9;
+      cursor: not-allowed;
+      border: 1px solid #ccc;
+      padding: 8px;
+      border-radius: 4px;
+    }
 
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    .button-group {
+      margin: 15px 0;
+    }
+
+    .toggle-btn {
+      padding: 10px 20px;
+      margin: 0 10px 10px 0;
+      border: none;
+      background-color: #ccc;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #000;
+      transition: background-color 0.3s;
+    }
+
+    .toggle-btn.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .submit-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Absen Rawat Inap</h2>
+  <div class="container">
+    <h2>Absen Rawat Inap</h2>
 
-        <label for="id">ID:</label>
-        <input type="text" id="id" name="id" required readonly>
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" readonly>
 
-        <label for="nama">Nama:</label>
-        <input type="text" id="nama" name="nama" required readonly>
+    <label for="nama">Nama:</label>
+    <input type="text" id="nama" name="nama" readonly>
 
-        <label for="shift">Shift:</label>
-        <select id="shift" name="shift" required>
-            <option value="1">Shift 1 (08:00 - 16:00)</option>
-            <option value="2">Shift 2 (16:00 - 08:00)</option>
-        </select>
-
-        <!-- Status moved below Shift -->
-        <label for="status">Status:</label>
-        <select id="status" name="status" required>
-            <option value="Masuk">Masuk</option>
-            <option value="Keluar">Keluar</option>
-        </select>
-
-        <button onclick="submitAbsensi()">Kirim Absen</button>
+    <div class="button-group">
+      <p>Pilih Shift:</p>
+      <button class="toggle-btn" data-group="shift" onclick="setShift(1, this)">Shift 1</button>
+      <button class="toggle-btn" data-group="shift" onclick="setShift(2, this)">Shift 2</button>
     </div>
 
-    <script>
-        // Mendapatkan parameter dari URL
-        function getUrlParams() {
-            var params = new URLSearchParams(window.location.search);
-            var id = params.get("id");
-            var nama = params.get("nama");
-            var shift = params.get("shift");
+    <div class="button-group">
+      <p>Status:</p>
+      <button class="toggle-btn" data-group="status" onclick="setStatus('Masuk', this)">Masuk</button>
+      <button class="toggle-btn" data-group="status" onclick="setStatus('Keluar', this)">Keluar</button>
+    </div>
 
-            if (id) {
-                document.getElementById("id").value = id; // Mengisi ID Pegawai
-            }
-            if (nama) {
-                document.getElementById("nama").value = nama; // Mengisi Nama Pegawai
-            }
-            if (shift) {
-                document.getElementById("shift").value = shift; // Mengisi Shift yang dipilih
-            }
-        }
+    <button class="submit-btn" onclick="submitAbsensi()">Kirim Absen</button>
+  </div>
 
-        // Fungsi untuk mengirim data absen
-        function submitAbsensi() {
-            var id = document.getElementById('id').value;
-            var nama = document.getElementById('nama').value;
-            var status = document.getElementById('status').value;
-            var shift = document.getElementById('shift').value;
+  <script>
+    let selectedShift = null;
+    let selectedStatus = null;
 
-            var url = `https://script.google.com/macros/s/AKfycbym4OZ6tUX5UamoL4kyv_2LGGCNqytiGlK13FcWa_5D2hPICZEd8bIEVTnaYToSgcNo/exec?id=${id}&nama=${nama}&status=${status}&shift=${shift}`;
+    function setShift(shift, element) {
+      selectedShift = shift;
+      document.querySelectorAll('[data-group="shift"]').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+    }
 
-            fetch(url)
-                .then(response => response.text())
-                .then(data => alert(data))
-                .catch(error => alert('Error: ' + error));
-        }
+    function setStatus(status, element) {
+      selectedStatus = status;
+      document.querySelectorAll('[data-group="status"]').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+    }
 
-        // Menjalankan fungsi untuk membaca URL ketika halaman dimuat
-        window.onload = getUrlParams;
-    </script>
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      const nama = params.get("nama");
+      const shift = params.get("shift");
+
+      if (id) document.getElementById("id").value = id;
+      if (nama) document.getElementById("nama").value = nama;
+      if (shift) {
+        const shiftBtn = document.querySelector(`[data-group="shift"]:nth-child(${shift})`);
+        if (shiftBtn) setShift(shift, shiftBtn);
+      }
+    }
+
+    function submitAbsensi() {
+      const id = document.getElementById('id').value;
+      const nama = document.getElementById('nama').value;
+
+      if (!selectedShift || !selectedStatus) {
+        alert("Silakan pilih Shift dan Status terlebih dahulu.");
+        return;
+      }
+
+      const url = `https://script.google.com/macros/s/AKfycbym4OZ6tUX5UamoL4kyv_2LGGCNqytiGlK13FcWa_5D2hPICZEd8bIEVTnaYToSgcNo/exec?id=${id}&nama=${nama}&status=${selectedStatus}&shift=${selectedShift}`;
+
+      fetch(url)
+        .then(response => response.text())
+        .then(data => alert(data))
+        .catch(error => alert('Error: ' + error));
+    }
+
+    window.onload = getUrlParams;
+  </script>
 </body>
 </html>
